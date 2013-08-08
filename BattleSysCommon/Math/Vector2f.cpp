@@ -26,7 +26,7 @@ Vector2f Vector2f::operator -(Vector2f a) {
 Vector2f Vector2f::operator -=(Vector2f a) {
 	this->x -= a.x;
 	this->y -= a.y;
-	return this;
+	return *(this);
 }
 
 Vector2f Vector2f::operator +(Vector2f a) {
@@ -36,7 +36,7 @@ Vector2f Vector2f::operator +(Vector2f a) {
 Vector2f Vector2f::operator +=(Vector2f a) {
 	this->x += a.x;
 	this->y += a.y;
-	return this;
+	return *(this);
 }
 
 Vector2f Vector2f::operator *(float s) {
@@ -44,34 +44,34 @@ Vector2f Vector2f::operator *(float s) {
 }
 
 Vector2f Vector2f::operator *=(float s) {
-	x *= s;
-	y *= s;
-	return this;
+	this->x *= s;
+	this->y *= s;
+	return *(this);
 }
 
 bool Vector2f::operator ==(Vector2f a) {
-	return a.x == x && a.y == y;
+	return a.x == this->x && a.y == this->y;
 }
 
 bool Vector2f::operator !=(Vector2f a) {
-	return !(this == a);
+	return !((*this) == a);
 }
 
 Vector2f Vector2f::clone() {
-	return Vector2f(x, y);
+	return Vector2f(this->x, this->y);
 }
 
 Vector2f Vector2f::normalize() {
 	float mag = magnitude();
 	if (mag != 0) {
-		x /= mag;
-		y /= mag;
+		this->x /= mag;
+		this->y /= mag;
 	}
-	return this;
+	return *(this);
 }
 
 float Vector2f::magnitude() {
-	return sqrt((x * x) + (y * y));
+	return sqrt((this->x * this->x) + (this->y * this->y));
 }
 
 float Vector2f::dotProduct(Vector2f u, Vector2f v) {
