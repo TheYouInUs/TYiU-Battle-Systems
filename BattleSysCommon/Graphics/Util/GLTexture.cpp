@@ -23,11 +23,14 @@ GLTexture::GLTexture() {
 }
 
 GLTexture::~GLTexture() {
-	free(rawData);
+	freeRawData();
 }
 
 void GLTexture::freeRawData() {
-	free(rawData);
+	if (rawData != NULL) {
+		free(rawData);
+		rawData = NULL;
+	}
 }
 
 void GLTexture::freeTexture() {
