@@ -68,7 +68,6 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	//test if png
 	int is_png = !png_sig_cmp(header, 0, 8);
 	if (!is_png) {
-		fclose(fp);
 		return TEXTURE_LOAD_ERROR;
 	}
 
@@ -239,5 +238,7 @@ int GLTexture::loadFromFile(char *fname) {
 		return TEXTURE_LOAD_ERROR;
 	}
 	// Grab the extension
-	return loadFromPNG(fp);
+	int status = loadFromPNG(fp);
+	fclose(fp);
+	return status;
 }
