@@ -8,8 +8,7 @@
 #ifndef BINARYMATH_H_
 #define BINARYMATH_H_
 
-int get2Fold_i(int t);
-
-unsigned int get2Fold_ui(unsigned int t);
+template <class T>
+T get2Fold(T t);
 
 #endif /* BINARYMATH_H_ */
