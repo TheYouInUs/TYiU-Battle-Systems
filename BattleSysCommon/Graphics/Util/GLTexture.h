@@ -9,12 +9,14 @@
 #define GLTEXTURE_H_
 
 #include <stdio.h>
+#include "GLColor.h"
 
 #define TEXTURE_LOAD_DEBUGGING	(1)
 #define TEXTURE_LOAD_SUCCESS	(0)
 #define TEXTURE_LOAD_ERROR		(1)
 
 typedef unsigned int texid_t;
+
 
 class GLTexture {
 private:
@@ -23,6 +25,10 @@ private:
 	unsigned int width;
 	unsigned int height;
 	unsigned int pixFMT;
+
+	// Information to access the data
+	unsigned int rowBytes;
+	unsigned int bitsPerPixel;
 public:
 	GLTexture();
 	virtual ~GLTexture();
@@ -37,6 +43,8 @@ public:
 
 	int getWidth();
 	int getHeight();
+
+	GLColor getColorAt(int x, int y);
 };
 
 #endif /* TEXTURE_H_ */

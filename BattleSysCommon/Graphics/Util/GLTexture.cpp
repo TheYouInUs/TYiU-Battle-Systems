@@ -6,6 +6,7 @@
  */
 
 #include "GLTexture.h"
+#include "GLColor.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <png.h>
@@ -17,6 +18,8 @@ GLTexture::GLTexture() {
 	height = 0;
 	width = 0;
 	textureID = 0;
+	rowBytes = 0;
+	bitsPerPixel = 0;
 }
 
 GLTexture::~GLTexture() {
@@ -109,6 +112,7 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	// get info about png
 	png_get_IHDR(png_ptr, info_ptr, &twidth, &theight, &bit_depth, &color_type,
 			NULL, NULL, NULL);
+	bitsPerPixel = bit_depth * png_get_channels(png_ptr, info_ptr);
 
 	//update width and height based on png info
 	width = twidth;
@@ -154,10 +158,10 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	png_read_update_info(png_ptr, info_ptr);
 
 	// Row size in bytes.
-	unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+	rowBytes = png_get_rowbytes(png_ptr, info_ptr);
 
 	// Allocate the image_data as a big block, to be given to opengl
-	rawData = malloc(rowbytes * height);
+	rawData = malloc(rowBytes * height);
 	if (!rawData) {
 		//clean up memory and close stuff
 		png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
@@ -173,7 +177,7 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	}
 	// set the individual row_pointers to point at the correct offsets of image_data
 	for (unsigned register int i = 0; i < height; ++i) {
-		row_pointers[height - 1 - i] = (png_bytep) rawData + i * rowbytes;
+		row_pointers[height - 1 - i] = (png_bytep) rawData + i * rowBytes;
 	}
 
 	//read the png into image_data through row_pointers
@@ -190,6 +194,33 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	return TEXTURE_LOAD_SUCCESS;
 }
 
+GLColor GLTexture::getColorAt(int x, int y) {
+	GLColor c;
+	char* ptr = (char*) (rawData + (rowBytes * (height - y - 1))
+			+ (x * bitsPerPixel / 8));
+	switch (pixFMT) {
+	case GL_RGBA:
+		c.setValue(
+				((ptr[0] & 0xff) << 24) | ((ptr[1] & 0xff) << 16)
+						| ((ptr[2] & 0xff) << 8) | (ptr[3] & 0xff));
+		break;
+	case GL_RGB:
+		c.setValue(
+				((ptr[0] & 0xff) << 24) | ((ptr[1] & 0xff) << 16)
+						| ((ptr[2] & 0xff) << 8) | 0xff);
+		break;
+	case GL_LUMINANCE:
+		c.setValue(
+				((ptr[0] & 0xff) << 24) | ((ptr[0] & 0xff) << 16)
+						| ((ptr[0] & 0xff) << 8) | 0xff);
+		break;
+	case GL_LUMINANCE_ALPHA:
+		c.setValue(0xffffffff & (ptr[0] & 0xff));
+		break;
+	}
+	return c;
+}
+
 int GLTexture::getWidth() {
 	return width;
 }
@@ -204,6 +235,6 @@ int GLTexture::loadFromFile(char *fname) {
 		fprintf(stderr, "Unable to open file %s\n", fname);
 		return TEXTURE_LOAD_ERROR;
 	}
-//Grab the extension
+	// Grab the extension
 	return loadFromPNG(fp);
 }
