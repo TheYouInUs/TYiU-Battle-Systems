@@ -1,18 +1,19 @@
 #include "Graphics/Util/GLFont.h"
 #include <GL/gl.h>
 #include <GL/freeglut.h>
-#define WIDTH  250
+#define WIDTH  500
 #define HEIGHT 500
 
-GLFont font = GLFont(0, 16, 16, "font.png", 0);
+GLTexture tex;
+GLFont font = GLFont(0, 16, 16, "font.png", false);
 void reshape(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
-	glOrtho(0.0, HEIGHT, 0.0, WIDTH, -1.0, 1.0);
+	glOrtho(0.0, WIDTH, 0.0, HEIGHT, -1.0, 1.0);
 }
 
 void render(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
-	font.render("Test");
+	font.render("Testing 1 2 3 4 5 6");
 	glFlush();
 }
 

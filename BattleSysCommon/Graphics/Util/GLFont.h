@@ -15,11 +15,14 @@ private:
 	int start, end;
 	int charCountX, charCountY;
 	GLTexture fontTexture;
-	float charWidth, charHeight;
-	float charPWidth, charPHeight;
+	float gridWidth, gridHeight;
+	float gridPWidth, gridPHeight;
 
+	float *charRight;
+	float *charLeft;
+	void calculateCharSize(int c);
 public:
-	GLFont(int, int, int, char[], float);
+	GLFont(int, int, int, char[], bool);
 	void render(char[]);
 	virtual ~GLFont();
 	void initialize();

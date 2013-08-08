@@ -9,23 +9,68 @@
 #include "GL/gl.h"
 
 GLFont::GLFont(int offset, int charCountX, int charCountY, char texFile[],
-		float charWidthOverride) :
+		bool monospaced) :
 		start(offset), charCountX(charCountX), charCountY(charCountY), fontTexture() {
 	fontTexture.loadFromFile(texFile);
 	end = offset + charCountX * charCountY;
-	charPHeight = ((float) fontTexture.getHeight()) / ((float) charCountY);
-	if (charWidthOverride > 0) {
-		charPWidth = charWidthOverride;
-		charWidth = charWidthOverride / ((float) fontTexture.getWidth());
+	gridWidth = 1.0 / ((float) charCountX);
+	gridHeight = 1.0 / ((float) charCountY);
+	gridPWidth = ((float) fontTexture.getWidth()) / ((float) charCountX);
+	gridPHeight = ((float) fontTexture.getHeight()) / ((float) charCountY);
+	if (monospaced) {
+		charRight = NULL;
+		charLeft = NULL;
 	} else {
-		charPWidth = ((float) fontTexture.getWidth()) / ((float) charCountX);
-		charWidth = 1.0 / ((float) charCountX);
+		charRight = new float[end - start];
+		charLeft = new float[end - start];
+		for (register int i = start; i < end; i++) {
+			calculateCharSize(i);
+		}
+
+		calculateCharSize(56);
 	}
-	charHeight = 1.0 / ((float) charCountY);
+}
+
+void GLFont::calculateCharSize(int i) {
+	int cID = i - start;
+	int cX = (cID % charCountX) * gridPWidth;
+	int cY = ((cID / charCountX) * gridPHeight);
+	charRight[cID] = 0;
+	for (int x = cX + gridPWidth - 1; x >= cX && charRight[cID] == 0; x--) {
+		for (int y = cY; y < cY + gridPHeight; y++) {
+			GLColor c = fontTexture.getColorAt(x, y); // Icky object allocatation TODO
+			if (c.a > 0.0) {
+				if (x - cX == gridPHeight - 1) {
+					return;
+				}
+				charRight[cID] = x - cX + 1;
+				break;
+			}
+		}
+	}
+	charLeft[cID] = 0;
+	for (int x = cX; x < cX + charRight[cID] && charRight[cID] != 0; x++) {
+		for (int y = cY; y < cY + gridPHeight; y++) {
+			GLColor c = fontTexture.getColorAt(x, y); // Icky object allocatation TODO
+			if (c.a > 0.0) {
+				charLeft[cID] = x - cX - 1;
+				return;
+			}
+		}
+	}
+	// A totally empty square.  What fun.  Howabouts we eyeball it's size
+	charLeft[cID] = gridPWidth / 4;
+	charRight[cID] = gridPWidth / 4 * 3;
 }
 
 GLFont::~GLFont() {
 	fontTexture.freeRawData();
+	if (charLeft != NULL) {
+		delete[] charLeft;
+	}
+	if (charRight != NULL) {
+		delete[] charRight;
+	}
 }
 
 void GLFont::initialize() {
@@ -42,25 +87,37 @@ void GLFont::render(char text[]) {
 	glBegin(GL_QUADS);
 	glColor3f(1, 1, 1);
 	float x = 0;
+
+	float charWidth = gridWidth;
+	float charPWidth = gridPWidth;
 	while (text[i] != 0) {
-		int cID = text[i] - start;
-		if (cID < start || cID >= end) {
+		int cID = (unsigned char) text[i] - start;
+		if (cID < 0 || cID >= end - start) {
 			cID = 0;
 		}
-		float cX = (cID % charCountX) * charWidth;
-		float cY = 1 - ((cID / charCountX) * charHeight);
 
-		glTexCoord2f(cX, cY - charHeight);
+		float cX = (cID % charCountX) * gridWidth;
+		float cY = 1 - ((cID / charCountX) * gridHeight);
+		if (charRight != NULL && charRight[cID] > 0) {
+			charPWidth = charRight[cID] - charLeft[cID];
+			charWidth = charPWidth / (float) fontTexture.getWidth();
+			cX += (charLeft[cID] / (float) fontTexture.getWidth());
+		} else {
+			charWidth = gridWidth;
+			charPWidth = gridPWidth;
+		}
+
+		glTexCoord2f(cX, cY - gridHeight);
 		glVertex2f(x, 0);
 
-		glTexCoord2f(cX + charWidth, cY - charHeight);
+		glTexCoord2f(cX + charWidth, cY - gridHeight);
 		glVertex2f(x + charPWidth, 0);
 
 		glTexCoord2f(cX + charWidth, cY);
-		glVertex2f(x + charPWidth, charPHeight);
+		glVertex2f(x + charPWidth, gridPHeight);
 
 		glTexCoord2f(cX, cY);
-		glVertex2f(x, charPHeight);
+		glVertex2f(x, gridPHeight);
 
 		x += charPWidth;
 		++i;
