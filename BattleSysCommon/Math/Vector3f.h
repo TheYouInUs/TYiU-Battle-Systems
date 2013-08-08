@@ -14,6 +14,25 @@ public:
 	Vector3f();
 	Vector3f(float, float, float);
 	virtual ~Vector3f();
+
+	Vector3f normalize();
+	float magnitude();
+	Vector3f clone();
+
+	inline Vector3f operator +(Vector3f);
+	inline Vector3f operator +=(Vector3f);
+
+	inline Vector3f operator -(Vector3f);
+	inline Vector3f operator -=(Vector3f);
+
+	inline Vector3f operator *(float);
+	inline Vector3f operator *=(float);
+
+	inline bool operator ==(Vector3f);
+	inline bool operator !=(Vector3f);
+
+	static float dotProduct(Vector3f, Vector3f);
+	static Vector3f crossProduct(Vector3f, Vector3f);
 };
 
 #endif /* VECTOR3F_H_ */
