@@ -1,29 +1,18 @@
 /*
- * Texture.cpp
+ * GLTexture.cpp
  *
  *  Created on: Jul 31, 2013
  *      Author: lwestin
  */
 
-#include "Texture.h"
+#include "GLTexture.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <png.h>
 #include <GL/gl.h>
 #include "../Math/BinaryMath.h"
 
-// GL Util Functions
-void Texture::freeTexture(const texid_t i) {
-	glDeleteTextures(1, &i);
-}
-
-texid_t Texture::createTextureID() {
-	texid_t i;
-	glGenTextures(1, &i);
-	return i;
-}
-
-Texture::Texture() {
+GLTexture::GLTexture() {
 	pixFMT = 0;
 	rawData = NULL;
 	height = 0;
@@ -31,25 +20,26 @@ Texture::Texture() {
 	textureID = 0;
 }
 
-Texture::~Texture() {
+GLTexture::~GLTexture() {
 	free(rawData);
 }
 
-void Texture::freeRawData() {
+void GLTexture::freeRawData() {
 	free(rawData);
 }
 
-void Texture::freeTexture() {
+void GLTexture::freeTexture() {
 	if (textureID > 0) {
-		freeTexture(textureID);
+		glDeleteTextures(1, &textureID);
 	}
 }
 
-void Texture::loadToVRAM() {
+void GLTexture::loadToVRAM() {
+	// If we are bound....
+	freeTexture();
 	if (rawData != NULL) {
+		glGenTextures(1, &textureID);  //Grab a texture ID
 		bind();
-		//glTexImage2D(GL_TEXTURE_2D, 0, pixFMT, get2Fold_ui(width),
-		//		get2Fold_ui(height), 0, pixFMT, GL_UNSIGNED_BYTE, rawData);
 		glTexImage2D(GL_TEXTURE_2D, 0, pixFMT, width, height, 0, pixFMT,
 				GL_UNSIGNED_BYTE, (GLvoid*) rawData);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -57,13 +47,13 @@ void Texture::loadToVRAM() {
 	}
 }
 
-void Texture::bind() {
+void GLTexture::bind() {
 	if (textureID > 0) {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 }
 
-int Texture::loadFromPNG(FILE *fp) {
+int GLTexture::loadFromPNG(FILE *fp) {
 	//header for testing if it is a png
 	png_byte header[8];
 
@@ -187,7 +177,7 @@ int Texture::loadFromPNG(FILE *fp) {
 	return TEXTURE_LOAD_SUCCESS;
 }
 
-int Texture::loadFromFile(char *fname) {
+int GLTexture::loadFromFile(char *fname) {
 	FILE *fp = fopen(fname, "br");  // Open for binary reading
 	if (!fp) {
 		fprintf(stderr, "Unable to open file %s\n", fname);

@@ -1,12 +1,12 @@
 /*
- * Texture.h
+ * GLTexture.h
  *
  *  Created on: Jul 31, 2013
  *      Author: lwestin
  */
 
-#ifndef TEXTURE_H_
-#define TEXTURE_H_
+#ifndef GLTEXTURE_H_
+#define GLTEXTURE_H_
 
 #include <stdio.h>
 
@@ -16,18 +16,16 @@
 
 typedef unsigned int texid_t;
 
-class Texture {
+class GLTexture {
 private:
 	texid_t textureID;
 	void *rawData;
 	unsigned int width;
 	unsigned int height;
 	unsigned int pixFMT;
-	static void freeTexture(const texid_t id);
-	static texid_t createTextureID();
 public:
-	Texture();
-	virtual ~Texture();
+	GLTexture();
+	virtual ~GLTexture();
 	int loadFromPNG(FILE *fp);
 	int loadFromFile(char *fname);
 	void freeRawData();

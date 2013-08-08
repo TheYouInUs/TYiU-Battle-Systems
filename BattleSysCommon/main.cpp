@@ -4,7 +4,7 @@
 #define WIDTH  250
 #define HEIGHT 500
 
-Texture t = Texture();
+GLTexture t = GLTexture();
 
 void reshape(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
