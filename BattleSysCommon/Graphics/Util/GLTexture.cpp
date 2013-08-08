@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <png.h>
 #include <GL/gl.h>
-#include "../Math/BinaryMath.h"
 
 GLTexture::GLTexture() {
 	pixFMT = 0;
@@ -115,24 +114,38 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	width = twidth;
 	height = theight;
 #if TEXTURE_LOAD_DEBUGGING
-	printf("PNG:\tLoaded %dx%d with a depth of %d\n", width, height, bit_depth);
+	printf("PNG:\tLoaded %dx%d with a depth of %d and color type of ", width,
+			height, bit_depth);
 #endif
 
 	//Update color info
 	switch (color_type) {
 	case PNG_COLOR_TYPE_GRAY:
 		pixFMT = GL_LUMINANCE;
+#if TEXTURE_LOAD_DEBUGGING
+		printf("GL_LUMINANCE\n");
+#endif
 		break;
 	case PNG_COLOR_TYPE_GRAY_ALPHA:
 		pixFMT = GL_LUMINANCE_ALPHA;
+#if TEXTURE_LOAD_DEBUGGING
+		printf("GL_LUMINANCE_ALPHA\n");
+#endif
 		break;
 	case PNG_COLOR_TYPE_RGBA:
 		pixFMT = GL_RGBA;
+#if TEXTURE_LOAD_DEBUGGING
+		printf("GL_ARGB\n");
+#endif
 		break;
 	case PNG_COLOR_TYPE_RGB:
 		pixFMT = GL_RGB;
+#if TEXTURE_LOAD_DEBUGGING
+		printf("GL_RGB\n");
+#endif
 		break;
 	default:
+		printf("\n");
 		fprintf(stderr, "PNG:\tUnsupported pixformat: %d\n", color_type);
 		return TEXTURE_LOAD_ERROR;
 	}
@@ -141,7 +154,7 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	png_read_update_info(png_ptr, info_ptr);
 
 	// Row size in bytes.
-	int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+	unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 
 	// Allocate the image_data as a big block, to be given to opengl
 	rawData = malloc(rowbytes * height);
@@ -177,8 +190,16 @@ int GLTexture::loadFromPNG(FILE *fp) {
 	return TEXTURE_LOAD_SUCCESS;
 }
 
+int GLTexture::getWidth() {
+	return width;
+}
+
+int GLTexture::getHeight() {
+	return height;
+}
+
 int GLTexture::loadFromFile(char *fname) {
-	FILE *fp = fopen(fname, "br");  // Open for binary reading
+	FILE *fp = fopen(fname, "rb");  // Open for binary reading
 	if (!fp) {
 		fprintf(stderr, "Unable to open file %s\n", fname);
 		return TEXTURE_LOAD_ERROR;

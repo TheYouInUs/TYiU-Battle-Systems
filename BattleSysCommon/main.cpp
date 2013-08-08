@@ -1,44 +1,22 @@
-#include "TexLoad/Texture.h"
+#include "Graphics/Util/GLFont.h"
 #include <GL/gl.h>
 #include <GL/freeglut.h>
 #define WIDTH  250
 #define HEIGHT 500
 
-GLTexture t = GLTexture();
-
+GLFont font = GLFont(0, 16, 16, "font.png", 0);
 void reshape(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
-	glOrtho(0.0, WIDTH, 0.0, HEIGHT, -1.0, 1.0);
+	glOrtho(0.0, HEIGHT, 0.0, WIDTH, -1.0, 1.0);
 }
 
 void render(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
-	t.bind();
-	glBegin(GL_QUADS);
-	glColor3f(1, 1, 1);
-	glTexCoord2f(0, 0);
-	glVertex2f(0, 0);
-
-	glTexCoord2f(1, 0);
-	glVertex2f(WIDTH, 0);
-
-	glTexCoord2f(1, 1);
-	glVertex2f(WIDTH, HEIGHT);
-
-	glTexCoord2f(0, 1);
-	glVertex2f(0, HEIGHT);
-	glEnd();
+	font.render("Test");
 	glFlush();
 }
 
 int main(int argc, char** argv) {
-	FILE *fp = fopen("char.png", "rb");
-	if (fp) {
-		t.loadFromPNG(fp);
-		fclose(fp);
-	} else {
-		printf("Can'topen\n");
-	}
 	glutInit(&argc, argv);
 
 	glutInitWindowPosition(0, 0);
@@ -54,7 +32,10 @@ int main(int argc, char** argv) {
 	glutIdleFunc(glutPostRedisplay);
 
 	glEnable(GL_TEXTURE_2D);
-	t.loadToVRAM();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	font.initialize();
 	glutMainLoop();
+	font.dispose();
 	return 0;
 }

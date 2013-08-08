@@ -26,6 +26,7 @@ private:
 public:
 	GLTexture();
 	virtual ~GLTexture();
+
 	int loadFromPNG(FILE *fp);
 	int loadFromFile(char *fname);
 	void freeRawData();
@@ -33,6 +34,9 @@ public:
 
 	void loadToVRAM();
 	void bind();
+
+	int getWidth();
+	int getHeight();
 };
 
 #endif /* TEXTURE_H_ */
