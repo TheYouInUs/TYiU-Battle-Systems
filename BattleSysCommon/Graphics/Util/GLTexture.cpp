@@ -53,6 +53,10 @@ void GLTexture::loadToVRAM() {
 }
 
 void GLTexture::bind() {
+	// If we aren't loaded to the vram and have raw data...
+	if (textureID <= 0 && rawData != NULL) {
+		loadToVRAM();
+	}
 	if (textureID > 0) {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
