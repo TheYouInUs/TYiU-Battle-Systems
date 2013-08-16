@@ -8,7 +8,7 @@
 #include "GLFont.h"
 #include "GL/gl.h"
 
-GLFont::GLFont(int offset, int charCountX, int charCountY, char texFile[],
+GLFont::GLFont(const char *texFile, int offset, int charCountX, int charCountY,
 		bool monospaced) :
 		start(offset), charCountX(charCountX), charCountY(charCountY), fontTexture() {
 	fontTexture.loadFromFile(texFile);
@@ -26,9 +26,8 @@ GLFont::GLFont(int offset, int charCountX, int charCountY, char texFile[],
 		for (register int i = start; i < end; i++) {
 			calculateCharSize(i);
 		}
-
-		calculateCharSize(56);
 	}
+	size = TEXTURE_FONT_SIZE;
 }
 
 void GLFont::calculateCharSize(int i) {
@@ -63,6 +62,14 @@ void GLFont::calculateCharSize(int i) {
 	charRight[cID] = gridPWidth / 4 * 3;
 }
 
+void GLFont::setSize(float f) {
+	size = f;
+}
+
+float GLFont::getSize() {
+	return size;
+}
+
 GLFont::~GLFont() {
 	fontTexture.freeRawData();
 	if (charLeft != NULL) {
@@ -81,7 +88,7 @@ void GLFont::dispose() {
 	fontTexture.freeTexture();
 }
 
-void GLFont::render(char text[]) {
+void GLFont::render(const char *text) {
 	register int i = 0;
 	fontTexture.bind();
 	glBegin(GL_QUADS);
@@ -90,6 +97,7 @@ void GLFont::render(char text[]) {
 
 	float charWidth = gridWidth;
 	float charPWidth = gridPWidth;
+	float vScale = size / TEXTURE_FONT_SIZE;
 	while (text[i] != 0) {
 		int cID = (unsigned char) text[i] - start;
 		if (cID < 0 || cID >= end - start) {
@@ -108,16 +116,16 @@ void GLFont::render(char text[]) {
 		}
 
 		glTexCoord2f(cX, cY - gridHeight);
-		glVertex2f(x, 0);
+		glVertex2f(x * vScale, 0);
 
 		glTexCoord2f(cX + charWidth, cY - gridHeight);
-		glVertex2f(x + charPWidth, 0);
+		glVertex2f((x + charPWidth) * vScale, 0);
 
 		glTexCoord2f(cX + charWidth, cY);
-		glVertex2f(x + charPWidth, gridPHeight);
+		glVertex2f((x + charPWidth) * vScale, gridPHeight * vScale);
 
 		glTexCoord2f(cX, cY);
-		glVertex2f(x, gridPHeight);
+		glVertex2f(x * vScale, gridPHeight * vScale);
 
 		x += charPWidth;
 		++i;

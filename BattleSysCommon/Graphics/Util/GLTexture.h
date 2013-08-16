@@ -34,7 +34,7 @@ public:
 	virtual ~GLTexture();
 
 	int loadFromPNG(FILE *fp);
-	int loadFromFile(char *fname);
+	int loadFromFile(const char *fname);
 	void freeRawData();
 	void freeTexture();
 

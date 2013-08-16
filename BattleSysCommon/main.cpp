@@ -1,11 +1,12 @@
 #include "Graphics/Util/GLFont.h"
+#include "Graphics/Util/GLTexture.h"
 #include <GL/gl.h>
 #include <GL/freeglut.h>
 #define WIDTH  500
 #define HEIGHT 500
 
-GLTexture tex;
-GLFont font = GLFont(0, 16, 16, "font.png", false);
+GLFont font = GLFont("font.png");
+//GLTexture texture;
 void reshape(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
 	glOrtho(0.0, WIDTH, 0.0, HEIGHT, -1.0, 1.0);
@@ -19,6 +20,7 @@ void render(void) {
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
+	font.setSize(8.0);
 
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(WIDTH, HEIGHT);
@@ -38,5 +40,7 @@ int main(int argc, char** argv) {
 	font.initialize();
 	glutMainLoop();
 	font.dispose();
+	//texture.freeRawData();
+	//texture.freeTexture();
 	return 0;
 }

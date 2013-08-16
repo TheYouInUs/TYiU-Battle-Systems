@@ -231,7 +231,7 @@ int GLTexture::getHeight() {
 	return height;
 }
 
-int GLTexture::loadFromFile(char *fname) {
+int GLTexture::loadFromFile(const char *fname) {
 	FILE *fp = fopen(fname, "rb");  // Open for binary reading
 	if (!fp) {
 		fprintf(stderr, "Unable to open file %s\n", fname);

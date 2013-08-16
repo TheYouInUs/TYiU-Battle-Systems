@@ -12,6 +12,8 @@
 
 class GLFont {
 private:
+	static const float TEXTURE_FONT_SIZE = 32.0;
+
 	int start, end;
 	int charCountX, charCountY;
 	GLTexture fontTexture;
@@ -20,10 +22,16 @@ private:
 
 	float *charRight;
 	float *charLeft;
+	float size;
 	void calculateCharSize(int c);
 public:
-	GLFont(int, int, int, char[], bool);
-	void render(char[]);
+	GLFont(const char *texName, int offset = 0, int cCountX = 16,
+			int cCountY = 16, bool monospace = false);
+
+	void setSize(float size);
+	float getSize();
+
+	void render(const char *text);
 	virtual ~GLFont();
 	void initialize();
 	void dispose();
