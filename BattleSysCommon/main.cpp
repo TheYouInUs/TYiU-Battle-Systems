@@ -1,11 +1,14 @@
 #include "Graphics/Util/GLFont.h"
+#include "Graphics/Util/FontInformation.h"
 #include "Graphics/Util/GLTexture.h"
+#include "Resources/ResourceManager.h"
 #include <GL/gl.h>
 #include <GL/freeglut.h>
 #define WIDTH  500
 #define HEIGHT 500
 
-GLFont font = GLFont("font.png");
+GLFont *font;
+FontInformation *fontInfo;
 //GLTexture texture;
 void reshape(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
@@ -14,13 +17,16 @@ void reshape(int width, int height) {
 
 void render(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
-	font.render("Testing 1 2 3 4 5 6");
+	font->render("Testing 1 2 3 4 5 6");
 	glFlush();
 }
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
-	font.setSize(8.0);
+	ResourceManager::get()->initialize(10);
+	fontInfo = ResourceManager::get()->find<FontInformation>("font.png");
+	font = new GLFont(fontInfo);
+	font->setSize(16.0);
 
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(WIDTH, HEIGHT);
@@ -37,10 +43,9 @@ int main(int argc, char** argv) {
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	font.initialize();
 	glutMainLoop();
-	font.dispose();
-	//texture.freeRawData();
-	//texture.freeTexture();
+
+	delete font;
+	ResourceManager::get()->destroy(fontInfo);
 	return 0;
 }

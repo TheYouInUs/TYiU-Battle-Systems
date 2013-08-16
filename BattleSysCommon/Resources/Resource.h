@@ -19,13 +19,13 @@ private:
 	Key resourceKey;
 	const char* loadedFile;
 	static Key generateKey(const char* str);
-
-	// Load and unload methods
-	virtual bool load(const char* fname) = 0;
-	virtual void unload() = 0;
 public:
 	Resource();
 	virtual ~Resource();
+protected:
+	// Load and unload methods
+	virtual bool load(const char* fname) = 0;
+	virtual void unload() = 0;
 };
 
 #endif /* RESOURCE_H_ */
