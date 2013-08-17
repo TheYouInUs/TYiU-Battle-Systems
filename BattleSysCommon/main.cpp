@@ -39,7 +39,12 @@ void render(void) {
 	glFlush();
 }
 
+void glfwError(int code, const char* desc) {
+	fprintf(stderr, "Error %d: %s\n", code, desc);
+}
+
 int main(int argc, char** argv) {
+	glfwSetErrorCallback(glfwError);
 	glfwInit();
 	ResourceManager::get()->initialize(10);
 	fontInfo = ResourceManager::get()->find<FontInformation>("font.png");
@@ -58,6 +63,7 @@ int main(int argc, char** argv) {
 	while (!window.isClosing()) {
 		render();
 		window.swapBuffers();
+		glfwPollEvents();
 	}
 
 	window.destroy();
