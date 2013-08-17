@@ -6,54 +6,59 @@
  */
 
 #include "GLWindow.h"
-#include <GL/freeglut.h>
+#include <GLFW/glfw3.h>
 
-GLWindow::GLWindow(char name[]) {
-	handle = glutCreateWindow(name);
+GLWindow::GLWindow(const char *name, int width, int height) {
+	handle = glfwCreateWindow(width, height, name, NULL, NULL);
 }
 
 GLWindow::~GLWindow() {
 }
 
 void GLWindow::destroy() {
-	glutDestroyWindow(handle);
+	glfwDestroyWindow(handle);
 }
 
-void GLWindow::bind() {
-	glutSetWindow(handle);
+void GLWindow::bindContext() {
+	glfwMakeContextCurrent(handle);
+}
+
+void GLWindow::swapBuffers() {
+	glfwSwapBuffers(handle);
+}
+
+GLFWwindow *GLWindow::getHandle() {
+	return handle;
 }
 
 void GLWindow::setVisible(bool visible) {
-	bind();
 	if (visible) {
-		glutShowWindow();
+		glfwShowWindow(handle);
 	} else {
-		glutHideWindow();
+		glfwHideWindow(handle);
 	}
 }
 
 void GLWindow::setPosition(int x, int y) {
-	bind();
-	glutPositionWindow(x, y);
+	glfwSetWindowPos(handle, x, y);
 }
 
 void GLWindow::setSize(int w, int h) {
-	bind();
-	glutReshapeWindow(w, h);
+	glfwSetWindowSize(handle, w, h);
 }
 
 void GLWindow::setTitle(char name[]) {
-	bind();
-	glutSetWindowTitle(name);
-}
-void GLWindow::setFullscreen(bool fullscreen) {
-	bind();
-	if (fullscreen != isFullscreen()) {
-		glutFullScreenToggle();
-	}
+	glfwSetWindowTitle(handle, name);
 }
 
 bool GLWindow::isFullscreen() {
-	bind();
-	return glutGet(GLUT_FULL_SCREEN);
+	return glfwGetWindowMonitor(handle) != NULL;
+}
+
+bool GLWindow::isClosing() {
+	return glfwWindowShouldClose(handle);
+}
+
+void GLWindow::getFramebufferSize(int &width, int &height) {
+	glfwGetFramebufferSize(handle, &width, &height);
 }

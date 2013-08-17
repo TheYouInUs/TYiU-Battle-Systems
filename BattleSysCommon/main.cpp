@@ -1,9 +1,10 @@
 #include "Graphics/Util/GLFont.h"
 #include "Graphics/Util/FontInformation.h"
 #include "Graphics/Util/GLTexture.h"
+#include "Graphics/Util/GLWindow.h"
 #include "Resources/ResourceManager.h"
 #include <GL/gl.h>
-#include <GL/freeglut.h>
+
 #define WIDTH  500
 #define HEIGHT 500
 
@@ -22,30 +23,30 @@ void render(void) {
 }
 
 int main(int argc, char** argv) {
-	glutInit(&argc, argv);
+	glfwInit();
 	ResourceManager::get()->initialize(10);
 	fontInfo = ResourceManager::get()->find<FontInformation>("font.png");
 	font = new GLFont(fontInfo);
 	font->setSize(16.0);
 
-	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(WIDTH, HEIGHT);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glutCreateWindow("Test");
+	GLWindow window("Test", WIDTH, HEIGHT);
 
-	glutDisplayFunc(render);
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,
-			GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+	window.bindContext();
 	reshape(WIDTH, HEIGHT);
-
-	glutIdleFunc(glutPostRedisplay);
-
+	glViewport(0, 0, WIDTH, HEIGHT);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glutMainLoop();
+
+	while (!window.isClosing()) {
+		render();
+		window.swapBuffers();
+	}
+
+	window.destroy();
 
 	delete font;
 	ResourceManager::get()->destroy(fontInfo);
+	glfwTerminate();
 	return 0;
 }
