@@ -16,9 +16,26 @@ void reshape(int width, int height) {
 	glOrtho(0.0, WIDTH, 0.0, HEIGHT, -1.0, 1.0);
 }
 
+double cFPS = 0;
+int frameCount = 0;
+double lastFrameUpdate = 0;
+char fpsString[10];
 void render(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	font->render("Testing 1 2 3 4 5 6");
+	glTranslatef(0, 200, 0);
+	sprintf(fpsString, "FPS: %f", cFPS);
+	font->render(fpsString);
+
+	frameCount++;
+	if (glfwGetTime() - lastFrameUpdate > 1.0) {
+		double time = glfwGetTime() - lastFrameUpdate;
+		cFPS = ((double)frameCount)/time;
+		lastFrameUpdate = glfwGetTime();
+		frameCount = 0;
+	}
 	glFlush();
 }
 
