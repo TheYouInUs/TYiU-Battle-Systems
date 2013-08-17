@@ -1,0 +1,8 @@
+png
+GL
+glfw3
+	X11
+	Xxf86vm
+	Xrandr
+	Xi
+	pthread
