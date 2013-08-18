@@ -17,7 +17,8 @@ class Resource {
 private:
 	int refCount;
 	Key resourceKey;
-	const char* loadedFile;
+	const char* resourceFile;
+	bool isLoaded;
 	static Key generateKey(const char* str);
 public:
 	Resource();

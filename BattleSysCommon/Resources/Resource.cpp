@@ -9,7 +9,7 @@
 #include <string.h>
 
 Resource::Resource() :
-		refCount(0), resourceKey(0), loadedFile(NULL) {
+		refCount(0), resourceKey(0), resourceFile(NULL), isLoaded(false) {
 }
 
 Resource::~Resource() {

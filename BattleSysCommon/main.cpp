@@ -4,6 +4,7 @@
 #include "Graphics/Util/GLWindow.h"
 #include "Resources/ResourceManager.h"
 #include <GL/gl.h>
+#include <GLFW/glfw3.h>
 
 #define WIDTH  500
 #define HEIGHT 500
@@ -32,7 +33,7 @@ void render(void) {
 	frameCount++;
 	if (glfwGetTime() - lastFrameUpdate > 1.0) {
 		double time = glfwGetTime() - lastFrameUpdate;
-		cFPS = ((double)frameCount)/time;
+		cFPS = ((double) frameCount) / time;
 		lastFrameUpdate = glfwGetTime();
 		frameCount = 0;
 	}
@@ -47,12 +48,15 @@ int main(int argc, char** argv) {
 	glfwSetErrorCallback(glfwError);
 	glfwInit();
 	ResourceManager::get()->initialize(10);
-	fontInfo = ResourceManager::get()->find<FontInformation>("font.png");
+	fontInfo = ResourceManager::get()->loadAsync<FontInformation>("font.png");
 	font = new GLFont(fontInfo);
 	font->setSize(16.0);
 
 	GLWindow window("Test", WIDTH, HEIGHT);
-
+	printf("Doing other stuff lol!\n");
+	double startTime = glfwGetTime();
+	ResourceManager::get()->waitForLoad(fontInfo);
+	printf("Waited for: %f seconds\n", glfwGetTime() - startTime);
 	window.bindContext();
 	reshape(WIDTH, HEIGHT);
 	glViewport(0, 0, WIDTH, HEIGHT);
@@ -71,5 +75,6 @@ int main(int argc, char** argv) {
 	delete font;
 	ResourceManager::get()->destroy(fontInfo);
 	glfwTerminate();
+	ResourceManager::get()->terminate();
 	return 0;
 }
