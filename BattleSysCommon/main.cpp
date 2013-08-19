@@ -1,8 +1,8 @@
 #include "Graphics/Util/GLFont.h"
 #include "Graphics/Util/FontInformation.h"
-#include "Graphics/Util/GLTexture.h"
 #include "Graphics/Util/GLWindow.h"
 #include "Resources/ResourceManager.h"
+#include "Input/InputManager.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
@@ -11,7 +11,6 @@
 
 GLFont *font;
 FontInformation *fontInfo;
-//GLTexture texture;
 void reshape(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
 	glOrtho(0.0, WIDTH, 0.0, HEIGHT, -1.0, 1.0);
@@ -53,6 +52,7 @@ int main(int argc, char** argv) {
 	font->setSize(16.0);
 
 	GLWindow window("Test", WIDTH, HEIGHT);
+	InputManager::get()->initialize(window.getHandle());
 	printf("Doing other stuff lol!\n");
 	double startTime = glfwGetTime();
 	ResourceManager::get()->waitForLoad(fontInfo);
@@ -68,13 +68,16 @@ int main(int argc, char** argv) {
 		render();
 		window.swapBuffers();
 		glfwPollEvents();
+		InputManager::get()->update();
 	}
-
-	window.destroy();
 
 	delete font;
 	ResourceManager::get()->destroy(fontInfo);
-	glfwTerminate();
 	ResourceManager::get()->terminate();
+	InputManager::get()->terminate();
+
+	// We need the context to free textures.
+	window.destroy();
+	glfwTerminate();
 	return 0;
 }
