@@ -15,7 +15,6 @@ FontInformation::FontInformation() :
 }
 
 FontInformation::~FontInformation() {
-	unload();
 }
 
 void FontInformation::calculateCharSize(int i) {
@@ -50,7 +49,7 @@ void FontInformation::calculateCharSize(int i) {
 	charRight[cID] = gridPWidth / 4 * 3;
 }
 
-void FontInformation::unload() {
+void FontInformation::unloadInternal() {
 	if (fontTexture != NULL) {
 		fontTexture->freeRawData();
 		fontTexture->freeTexture();
@@ -64,7 +63,7 @@ void FontInformation::unload() {
 	}
 }
 
-bool FontInformation::load(const char *fileName) {
+bool FontInformation::loadInternal(const char *fileName) {
 	if (fontTexture != NULL) {
 		return false;
 	}

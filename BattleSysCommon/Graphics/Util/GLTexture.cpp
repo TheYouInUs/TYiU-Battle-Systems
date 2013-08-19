@@ -36,6 +36,7 @@ void GLTexture::freeRawData() {
 void GLTexture::freeTexture() {
 	if (textureID > 0) {
 		glDeleteTextures(1, &textureID);
+		textureID = 0;
 	}
 }
 
@@ -202,8 +203,8 @@ int GLTexture::loadFromPNG(FILE *fp) {
 
 GLColor GLTexture::getColorAt(int x, int y) {
 	GLColor c;
-	char* ptr = (char*) (rawData + (rowBytes * (height - y - 1))
-			+ (x * bitsPerPixel / 8));
+	char* ptr = ((char*) rawData) + (rowBytes * (height - y - 1))
+			+ (x * bitsPerPixel / 8);
 	switch (pixFMT) {
 	case GL_RGBA:
 		c.setValue(

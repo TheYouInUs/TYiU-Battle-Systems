@@ -23,10 +23,15 @@ private:
 public:
 	Resource();
 	virtual ~Resource();
+
+	bool isResourceLoaded();
+
+	const bool load(const char* fname);
+	const void unload();
 protected:
 	// Load and unload methods
-	virtual bool load(const char* fname) = 0;
-	virtual void unload() = 0;
+	virtual bool loadInternal(const char* fname) = 0;
+	virtual void unloadInternal() = 0;
 };
 
 #endif /* RESOURCE_H_ */

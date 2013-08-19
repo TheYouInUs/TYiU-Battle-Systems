@@ -37,8 +37,8 @@ public:
 	void getCharacterAddress(const char c, float &cX, float &cY,
 			float &cWidth, float &cHeight);
 protected:
-	virtual bool load(const char *file);
-	virtual void unload();
+	virtual bool loadInternal(const char *file);
+	virtual void unloadInternal();
 };
 
 #endif /* FONTSTORAGE_H_ */

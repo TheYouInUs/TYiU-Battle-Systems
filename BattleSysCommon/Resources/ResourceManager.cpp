@@ -52,7 +52,6 @@ void ResourceManager::runIteration() {
 		// Now load it, releasing the lock while we do.
 		if (res != NULL && !res->isLoaded) {
 			res->load(res->resourceFile);
-			res->isLoaded = true;
 		}
 	} else {
 		pthread_mutex_unlock(&loadQueueMutex);
