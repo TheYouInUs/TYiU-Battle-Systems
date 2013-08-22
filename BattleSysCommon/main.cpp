@@ -29,6 +29,13 @@ void render(void) {
 	sprintf(fpsString, "FPS: %f", cFPS);
 	font->render(fpsString);
 
+	sprintf(fpsString, "Mx: %f", InputManager::get()->getMouseX());
+	glTranslatef(0, 100, 0);
+	font->render(fpsString);
+	sprintf(fpsString, "My: %f", InputManager::get()->getMouseY());
+	glTranslatef(0, 25, 0);
+	font->render(fpsString);
+
 	frameCount++;
 	if (glfwGetTime() - lastFrameUpdate > 1.0) {
 		double time = glfwGetTime() - lastFrameUpdate;
@@ -53,6 +60,7 @@ int main(int argc, char** argv) {
 
 	GLWindow window("Test", WIDTH, HEIGHT);
 	InputManager::get()->initialize(window.getHandle());
+
 	printf("Doing other stuff lol!\n");
 	double startTime = glfwGetTime();
 	ResourceManager::get()->waitForLoad(fontInfo);

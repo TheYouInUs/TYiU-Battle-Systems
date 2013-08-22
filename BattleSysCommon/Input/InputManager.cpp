@@ -138,5 +138,7 @@ double InputManager::getMouseX() {
 }
 
 double InputManager::getMouseY() {
-	return mouseY;
+	int width, height;
+	glfwGetFramebufferSize(currentWindow, &width, &height);
+	return (double) height - mouseY;
 }
