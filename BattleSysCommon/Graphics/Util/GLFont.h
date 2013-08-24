@@ -24,6 +24,8 @@ public:
 	float getSize();
 
 	void render(const char *text);
+
+	FontInformation *getFontInformation();
 };
 
 #endif /* GLFONT_H_ */

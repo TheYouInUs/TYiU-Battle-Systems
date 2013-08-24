@@ -59,3 +59,7 @@ void GLFont::render(const char *text) {
 	}
 	glEnd();
 }
+
+FontInformation *GLFont::getFontInformation() {
+	return fontInformation;
+}
