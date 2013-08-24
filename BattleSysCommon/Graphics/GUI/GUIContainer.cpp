@@ -13,6 +13,10 @@ GUIContainer::GUIContainer() :
 		children() {
 }
 
+GUIContainer::GUIContainer(float x, float y, float width, float height) :
+		GUIWidget(x, y, width, height), children() {
+}
+
 GUIContainer::~GUIContainer() {
 }
 

@@ -21,6 +21,7 @@ public:
 	Vector2f size;
 
 	GUIWidget();
+	GUIWidget(float x, float y, float width, float height);
 	virtual ~GUIWidget();
 	virtual void render();
 	virtual void update(int mouseX, int mouseY);

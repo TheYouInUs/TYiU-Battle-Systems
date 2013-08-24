@@ -84,8 +84,8 @@ int main(int argc, char** argv) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	root = new GUIContainer();
-	root->size.set(50.0, 50.0);
+	root = new GUIContainer(50.0, 50.0, 200.0, 200.0);
+	root->add(new GUIWidget(25.0, 25.0, 100.0, 100.0));
 
 	while (!window.isClosing()) {
 		render();

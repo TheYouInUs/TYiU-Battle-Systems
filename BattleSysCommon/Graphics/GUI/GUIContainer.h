@@ -16,6 +16,7 @@ private:
 	std::vector<GUIWidget*> children;
 public:
 	GUIContainer();
+	GUIContainer(float x, float y, float width, float height);
 	virtual ~GUIContainer();
 	void add(GUIWidget* widget);
 	virtual void update(int mouseX, int mouseY);

@@ -13,6 +13,10 @@ GUIWidget::GUIWidget() :
 		hovered(false), hasFocus(false), position(0, 0), size(0, 0) {
 }
 
+GUIWidget::GUIWidget(float x, float y, float width, float height) :
+		hovered(false), hasFocus(false), position(x, y), size(width, height) {
+}
+
 GUIWidget::~GUIWidget() {
 }
 
