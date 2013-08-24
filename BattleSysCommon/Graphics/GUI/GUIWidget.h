@@ -11,11 +11,13 @@
 #define GUI_DEBUG 1
 
 #include "../../Math/Vector2f.h"
+#include "../Util/GLFont.h"
 
 class GUIWidget {
 protected:
 	bool hovered;
 	bool hasFocus;
+	GLFont *font;
 public:
 	Vector2f position;
 	Vector2f size;
@@ -24,7 +26,7 @@ public:
 	GUIWidget(float x, float y, float width, float height);
 	virtual ~GUIWidget();
 	virtual void render();
-	virtual void update(int mouseX, int mouseY);
+	virtual void update(double mouseX, double mouseY);
 	virtual void deepDelete();
 
 	bool isClicked(unsigned int button);

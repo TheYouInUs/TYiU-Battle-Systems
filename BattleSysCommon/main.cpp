@@ -88,6 +88,8 @@ int main(int argc, char** argv) {
 	root->add(new GUIWidget(25.0, 25.0, 100.0, 100.0));
 
 	while (!window.isClosing()) {
+		root->update(InputManager::get()->getMouseX(),
+				InputManager::get()->getMouseY());
 		render();
 		window.swapBuffers();
 		glfwPollEvents();

@@ -32,16 +32,27 @@ void GUIContainer::render() {
 	for (itr = children.begin(); itr != children.end(); ++itr) {
 		(*itr)->render();
 	}
+#if GUI_DEBUG
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_LINES);
+	glColor3f(1.0, 0.0, 0.0);
+	for (itr = children.begin(); itr != children.end(); ++itr) {
+		glVertex2f(0.0, 0.0);
+		glVertex2f((*itr)->position.x, (*itr)->position.y);
+	}
+	glEnd();
+	glEnable(GL_TEXTURE_2D);
+#endif
 	glPopMatrix();
 }
 
-void GUIContainer::update(int mouseX, int mouseY) {
+void GUIContainer::update(double mouseX, double mouseY) {
 	GUIWidget::update(mouseX, mouseY);
 	int childX, childY;
 	std::vector<GUIWidget*>::iterator itr;
 	for (itr = children.begin(); itr != children.end(); ++itr) {
-		childX = mouseX + (*itr)->position.x;
-		childY = mouseX + (*itr)->position.y;
+		childX = mouseX - position.x;
+		childY = mouseX - position.y;
 		(*itr)->update(childX, childY);
 	}
 }
