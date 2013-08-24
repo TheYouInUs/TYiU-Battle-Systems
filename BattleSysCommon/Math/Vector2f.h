@@ -32,6 +32,11 @@ public:
 	inline bool operator !=(Vector2f);
 
 	static float dotProduct(Vector2f, Vector2f);
+
+	inline void set(float x, float y) {
+		this->x = x;
+		this->y = y;
+	}
 };
 
 #endif /* VECTOR2F_H_ */

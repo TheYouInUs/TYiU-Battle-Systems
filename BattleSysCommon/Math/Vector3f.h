@@ -33,6 +33,12 @@ public:
 
 	static float dotProduct(Vector3f, Vector3f);
 	static Vector3f crossProduct(Vector3f, Vector3f);
+
+	inline void set(float x, float y, float z) {
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
 };
 
 #endif /* VECTOR3F_H_ */

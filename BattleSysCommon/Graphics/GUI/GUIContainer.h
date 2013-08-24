@@ -20,6 +20,7 @@ public:
 	void add(GUIWidget* widget);
 	virtual void update(int mouseX, int mouseY);
 	virtual void render();
+	virtual void deepDelete();
 };
 
 #endif /* GUICONTAINER_H_ */

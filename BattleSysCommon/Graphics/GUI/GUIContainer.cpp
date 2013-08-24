@@ -41,3 +41,11 @@ void GUIContainer::update(int mouseX, int mouseY) {
 		(*itr)->update(childX, childY);
 	}
 }
+
+void GUIContainer::deepDelete() {
+	std::vector<GUIWidget*>::iterator itr;
+	for (itr = children.begin(); itr != children.end(); ++itr) {
+		(*itr)->deepDelete();
+		delete (*itr);
+	}
+}
