@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-template <class T>
+template<class T>
 T get2Fold(T t);
 
 void setFlag(uint8_t *buffer, unsigned int flag, bool val);
@@ -18,7 +18,11 @@ bool getFlag(uint8_t *buffer, unsigned int flag);
 
 // Inline Functions
 inline void setFlag(uint8_t *buffer, unsigned int flag, bool val) {
-	buffer[flag >> 3] |= (val ? 1 : 0) << (flag & 0b111);
+	if (val) {
+		buffer[flag >> 3] |= 1 << (flag & 0b111);
+	} else {
+		buffer[flag >> 3] &= ~(1 << (flag & 0b111));
+	}
 }
 
 inline bool getFlag(uint8_t *buffer, unsigned int flag) {
