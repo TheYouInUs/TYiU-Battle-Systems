@@ -117,7 +117,7 @@ void ResourceManager::destroy(Resource *res) {
 		for (register std::vector<Resource*>::iterator itr = resources.begin();
 				itr != resources.end(); ++itr) {
 			if (NULL != (*itr) && (*itr)->resourceKey == res->resourceKey
-					&& strcmp(res->resourceFile, (*itr)->resourceFile)) {
+					&& strcmp(res->resourceFile, (*itr)->resourceFile)==0) {
 				pthread_mutex_lock(&resourcesMutex);
 				resources.erase(itr);
 				pthread_mutex_unlock(&resourcesMutex);
@@ -128,7 +128,7 @@ void ResourceManager::destroy(Resource *res) {
 					if (NULL != (*itr)
 							&& (*itr)->resourceKey == res->resourceKey
 							&& strcmp(res->resourceFile,
-									(*itr)->resourceFile)) {
+									(*itr)->resourceFile)==0) {
 						pthread_mutex_lock(&loadQueueMutex);
 						loadQueue.erase(litr);
 						pthread_mutex_unlock(&loadQueueMutex);

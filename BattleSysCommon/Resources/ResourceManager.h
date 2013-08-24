@@ -67,7 +67,7 @@ Resource_T *ResourceManager::loadAsync(const char *fileName) {
 	for (register std::vector<Resource*>::iterator itr = resources.begin();
 			itr != resources.end(); ++itr) {
 		if (NULL != (*itr) && (*itr)->resourceKey == resourceKey
-				&& strcmp(fileName, (*itr)->resourceFile)) {
+				&& strcmp(fileName, (*itr)->resourceFile) == 0) {
 			(*itr)->refCount++;
 			return (Resource_T*) (*itr);
 		}
