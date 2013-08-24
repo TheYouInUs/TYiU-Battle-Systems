@@ -95,7 +95,7 @@ void InputManager::update() {
 
 	// Mouse Position and Buttons
 	memcpy(previousMouseButtonBuffer, currentMouseButtonBuffer,
-			sizeof(uint8_t) * KEY_BUFFER_SIZE);
+			sizeof(uint8_t) * MOUSE_BUTTON_BUFFER_SIZE);
 	glfwGetCursorPos(currentWindow, &mouseX, &mouseY);
 	for (i = 0; i <= GLFW_MOUSE_BUTTON_LAST; ++i) {
 		setFlag(currentMouseButtonBuffer, i,
